@@ -17,8 +17,9 @@ Welcome to the **Face Recognition With Attendance System**! This is a web-based,
 ## 🔑 Default Credentials
 
 Because the system doesn't rely on an external database, the admin panel uses a default set of open-source credentials:
-- **Username:** `admin`
-- **Password:** `admin123`
+- **Admin Username:** `admin`
+- **Admin Password:** `admin123`
+- **Security PIN (View Records / Register Face):** `0027`
 
 ---
 
