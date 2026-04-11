@@ -1,4 +1,4 @@
-<div align="center">
+<div align="left">
   <img src="images/logo.png" alt="Face Detective Logo" />
 </div>
 
