@@ -2,7 +2,7 @@
   <img src="images/logo.png" alt="Face Detective Logo" />
 </div>
 
-# Face Recognition With Attendance System
+# Attendance With Face Recognition
 
 Welcome to the **Face Recognition With Attendance System**! This is a web-based, offline-capable application that allows users to register their faces and log attendance completely offline using client-side facial recognition. All data is securely handled on your device without relying on any backend or servers.
 
