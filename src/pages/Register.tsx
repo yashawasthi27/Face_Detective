@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Camera, CheckCircle, AlertCircle, RefreshCw, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getFaceDescriptor } from '../utils/faceApi';
+import { getFaceDescriptor, loadModels } from '../utils/faceApi';
 import { saveRegistration } from '../utils/storage';
 import CustomSelect from '../components/CustomSelect';
 
@@ -26,6 +26,10 @@ const Register = () => {
     const [descriptors, setDescriptors] = useState<number[][]>([]);
     const [finalPhoto, setFinalPhoto] = useState<string>('');
 
+    // Preload models
+    useEffect(() => {
+        loadModels().catch(console.error);
+    }, []);
 
     useEffect(() => {
         let isMounted = true;
@@ -34,6 +38,7 @@ const Register = () => {
         const initCamera = async () => {
             if (stage !== 2) return;
             try {
+                await loadModels(); // Ensure models are ready before camera use
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 if (!isMounted) {
                     stream.getTracks().forEach(track => track.stop());
@@ -52,7 +57,7 @@ const Register = () => {
                 console.error("Camera error:", err);
                 if (isMounted) {
                     setStatus('error');
-                    setErrorMessage('Failed to access camera. Please ensure permissions are granted.');
+                    setErrorMessage('Failed to access camera or load models.');
                 }
             }
         };

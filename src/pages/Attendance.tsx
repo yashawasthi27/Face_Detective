@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { Camera, CheckCircle, AlertCircle, RefreshCw, UserCheck, ClipboardList, ArrowRight, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as faceapi from '@vladmandic/face-api';
-import { detectFace } from '../utils/faceApi';
+import { detectFace, loadModels } from '../utils/faceApi';
 import { getRegistrations, saveAttendance, getAttendance, exportToCSV, type FaceRegistration } from '../utils/storage';
 import TimeKeeper from 'react-timekeeper';
 import { useNavigate } from 'react-router-dom';
@@ -35,6 +35,11 @@ const Attendance = () => {
         setAvailableFaculty(facultyRegs);
     }, []);
 
+    // Preload models
+    useEffect(() => {
+        loadModels().catch(console.error);
+    }, []);
+
     // Clock Modals controls
     const [showStartClock, setShowStartClock] = useState(false);
     const [showEndClock, setShowEndClock] = useState(false);
@@ -51,6 +56,7 @@ const Attendance = () => {
         const initCamera = async () => {
             if (stage !== 2) return;
             try {
+                await loadModels(); // Ensure models are ready before camera use
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 if (!isMounted) {
                     stream.getTracks().forEach(track => track.stop());
@@ -69,7 +75,7 @@ const Attendance = () => {
                 console.error("Camera error:", err);
                 if (isMounted) {
                     setStatus('error');
-                    setMessage('Failed to access camera.');
+                    setMessage('Failed to access camera or load models.');
                 }
             }
         };

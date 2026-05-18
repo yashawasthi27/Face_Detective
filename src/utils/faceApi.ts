@@ -2,17 +2,26 @@ import * as faceapi from '@vladmandic/face-api';
 
 const MODEL_URL = '/models';
 
+let loadModelsPromise: Promise<void> | null = null;
+
 export const loadModels = async () => {
-    try {
-        await Promise.all([
-            faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-            faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-            faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
-        ]);
-        console.log('Models loaded successfully');
-    } catch (error) {
-        console.error('Error loading models:', error);
+    if (!loadModelsPromise) {
+        loadModelsPromise = (async () => {
+            try {
+                await Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
+                ]);
+                console.log('Models loaded successfully');
+            } catch (error) {
+                console.error('Error loading models:', error);
+                loadModelsPromise = null;
+                throw error;
+            }
+        })();
     }
+    return loadModelsPromise;
 };
 
 export const detectFace = async (video: HTMLVideoElement) => {

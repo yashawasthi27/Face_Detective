@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Shield, Trash2, Edit2, Check, X, Users, LogOut, Activity, Calendar, Clock, Trophy, ClipboardList, Camera, RefreshCw, UserCheck, AlertCircle, CheckCircle, Eye, ArrowRight } from 'lucide-react';
 import { getRegistrations, updateRegistration, deleteRegistrationAndAttendance, getAttendance, updateRegistrationFace, verifyRegistration, clearAllData, type FaceRegistration } from '../utils/storage';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getFaceDescriptor } from '../utils/faceApi';
+import { getFaceDescriptor, loadModels } from '../utils/faceApi';
 
 const AdminDashboard = () => {
     const navigate = useNavigate();
@@ -92,6 +92,7 @@ const AdminDashboard = () => {
         const initCamera = async () => {
             if (!updatingUser) return;
             try {
+                await loadModels(); // Ensure models are ready
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 if (!isMounted) {
                     stream.getTracks().forEach(track => track.stop());
